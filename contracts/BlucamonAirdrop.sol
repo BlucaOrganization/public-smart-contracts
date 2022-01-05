@@ -14,6 +14,7 @@ contract BlucamonAirdrop is BlucamonFactory {
     struct AirdropEggDetail {
         uint256 id;
         string tokenUri;
+        uint8 rarity;
     }
 
     modifier onlyAirdropWhitelist(address _address) {
@@ -30,23 +31,34 @@ contract BlucamonAirdrop is BlucamonFactory {
     }
 
     function setWhitelist(
+        uint256[] memory _idList,
         address[] memory _addresses,
-        string[] memory _tokenUriList
+        string[] memory _tokenUriList,
+        uint8[] memory _rarityList
     ) external onlyAirdropSetter {
-        validateWhitelistParameter(_addresses, _tokenUriList);
+        validateWhitelistParameter(
+            _idList,
+            _addresses,
+            _tokenUriList,
+            _rarityList
+        );
         for (uint256 idx = 0; idx < _addresses.length; idx++) {
             whitelistEggDetail[_addresses[idx]] = setEggDetail(
-                _tokenUriList[idx]
+                _idList[idx],
+                _tokenUriList[idx],
+                _rarityList[idx]
             );
         }
     }
 
-    function setEggDetail(string memory _tokenUri)
-        internal
-        returns (AirdropEggDetail memory)
-    {
+    function setEggDetail(
+        uint256 _id,
+        string memory _tokenUri,
+        uint8 _rarity
+    ) internal returns (AirdropEggDetail memory) {
         blucamonId = blucamonId.add(1);
-        return AirdropEggDetail({id: blucamonId, tokenUri: _tokenUri});
+        return
+            AirdropEggDetail({id: _id, tokenUri: _tokenUri, rarity: _rarity});
     }
 
     function claim(address _address) internal {
@@ -54,13 +66,28 @@ contract BlucamonAirdrop is BlucamonFactory {
     }
 
     function validateWhitelistParameter(
+        uint256[] memory _idList,
         address[] memory _addresses,
-        string[] memory _tokenUriList
+        string[] memory _tokenUriList,
+        uint8[] memory _rarityList
     ) private pure {
+        uint256 idCount = _idList.length;
         uint256 addressCount = _addresses.length;
         uint256 tokenUriCount = _tokenUriList.length;
-        require(addressCount > 0 && tokenUriCount > 0, "S_ARD_101");
-        require(addressCount == tokenUriCount, "S_ARD_102");
+        uint256 rarityCount = _rarityList.length;
+        require(
+            addressCount > 0 &&
+                tokenUriCount > 0 &&
+                rarityCount > 0 &&
+                idCount > 0,
+            "S_ARD_101"
+        );
+        require(
+            addressCount == tokenUriCount &&
+                addressCount == rarityCount &&
+                addressCount == idCount,
+            "S_ARD_102"
+        );
     }
 
     function getEggDetail() internal view returns (AirdropEggDetail memory) {

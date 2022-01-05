@@ -13,13 +13,32 @@ abstract contract BlucamonFactory is BlucaDependency {
     struct Blucamon {
         bool isSummoned;
         uint8 elementalFragments;
+        uint8 rarity;
+        uint256 blucadexId;
+        uint8 eggElement;
     }
+
+    uint8 public defaultElementalFragments = 5;
 
     Blucamon[] public blucamons;
     uint256 public blucamonId = 0;
-    uint8 defaultElementalFragments = 5;
+    mapping(uint256 => uint256) public indexMapping;
 
-    mapping(uint256 => uint256) indexMapping;
+    function getBlucamonCount() public view returns (uint256) {
+        return blucamons.length;
+    }
+
+    function getBlucamonId() public view returns (uint256) {
+        return blucamonId;
+    }
+
+    function setBlucamonId(uint256 _newBlucamonId) external onlySpawner {
+        blucamonId = _newBlucamonId;
+    }
+
+    function getDefaultElementalFragments() public view returns (uint8) {
+        return defaultElementalFragments;
+    }
 
     function setDefaultElementalFragments(uint8 _newValue)
         external
@@ -28,8 +47,22 @@ abstract contract BlucamonFactory is BlucaDependency {
         defaultElementalFragments = _newValue;
     }
 
-    function spawnBlucamon(uint256 _id, bool _isSummoned) internal {
-        blucamons.push(Blucamon(_isSummoned, defaultElementalFragments));
+    function spawnBlucamon(
+        uint256 _id,
+        bool _isSummoned,
+        uint8 _rarity,
+        uint256 _blucadexId,
+        uint8 _eggElement
+    ) internal {
+        blucamons.push(
+            Blucamon(
+                _isSummoned,
+                defaultElementalFragments,
+                _rarity,
+                _blucadexId,
+                _eggElement
+            )
+        );
         indexMapping[_id] = blucamons.length - 1;
         if (_isSummoned) {
             emit SpawnBlucamon(_id);
