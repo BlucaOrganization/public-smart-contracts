@@ -58,7 +58,7 @@ contract BlucamonOwnership is
         return super.supportsInterface(interfaceId);
     }
 
-    function safeMint(address to, uint256 tokenId) public onlyOwner {
+    function safeMint(address to, uint256 tokenId) external onlyOwner {
         _safeMint(to, tokenId);
     }
 
