@@ -123,7 +123,7 @@ contract ExclusiveSale {
     }
 
     function validatePurchasing(uint256 _value) private view {
-        require(_value >= price, "S_EXS_300");
+        require(_value == price, "S_EXS_300");
         require(currentNumber < total, "S_EXS_400");
         require(block.timestamp >= startTime, "S_EXS_500");
         require(block.timestamp < endTime, "S_EXS_501");
