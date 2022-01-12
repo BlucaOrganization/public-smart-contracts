@@ -8,9 +8,11 @@ contract StandardSale {
     using Strings for uint256;
     using SafeMath for uint256;
 
-    constructor(address _ownershipContractAddress) {
+    constructor(address _ownershipContractAddress, address _busdContractAddress)
+    {
         blucamonOwnershipContract = _ownershipContractAddress;
         setter = msg.sender;
+        busdContract = _busdContractAddress;
     }
 
     event PurchaseStandardEgg(uint256 blucamonId);
@@ -22,7 +24,6 @@ contract StandardSale {
         uint256 _startTime,
         uint256 _endTime
     );
-    event SetBusdContract(address _newAddress);
     event SetCurrentNumber(uint256 _newNumber);
     event SetPrefixTokenUri(string _newPrefixTokenUri);
     event DisableEvent();
@@ -64,11 +65,6 @@ contract StandardSale {
         startTime = _startTime;
         endTime = _endTime;
         emit SetEvent(_price, _total, _startTime, _endTime);
-    }
-
-    function setBusdContract(address _newAddress) external onlySetter {
-        busdContract = _newAddress;
-        emit SetBusdContract(_newAddress);
     }
 
     function setCurrentNumber(uint256 _newNumber) external onlySetter {
