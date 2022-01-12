@@ -18,7 +18,6 @@ contract BlucamonOwnership is
     using SafeMath for uint256;
     using SafeMath8 for uint8;
 
-    event SafeMint(address to, uint256 tokenId);
     event Summon(uint256 _id);
     event MintBlucamon(
         address _address,
@@ -74,11 +73,6 @@ contract BlucamonOwnership is
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
-    }
-
-    function safeMint(address to, uint256 tokenId) external onlyOwner {
-        _safeMint(to, tokenId);
-        emit SafeMint(to, tokenId);
     }
 
     function getIndex(uint256 _id) public view returns (uint256) {
