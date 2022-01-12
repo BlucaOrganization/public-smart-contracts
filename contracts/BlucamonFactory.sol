@@ -9,6 +9,8 @@ abstract contract BlucamonFactory is BlucaDependency {
     event SpawnBlucamonEgg(uint256 blucamonId);
     event SummonBlucamon(uint256 blucamonId);
     event BreedBlucamon(uint256 blucamonId1, uint256 blucamonId2);
+    event SetBlucamonId(uint256 _newBlucamonId);
+    event SetDefaultElementalFragments(uint8 _newValue);
 
     struct Blucamon {
         bool isSummoned;
@@ -34,6 +36,7 @@ abstract contract BlucamonFactory is BlucaDependency {
 
     function setBlucamonId(uint256 _newBlucamonId) external onlySpawner {
         blucamonId = _newBlucamonId;
+        emit SetBlucamonId(_newBlucamonId);
     }
 
     function getDefaultElementalFragments() public view returns (uint8) {
@@ -45,6 +48,7 @@ abstract contract BlucamonFactory is BlucaDependency {
         onlySpawner
     {
         defaultElementalFragments = _newValue;
+        emit SetDefaultElementalFragments(_newValue);
     }
 
     function spawnBlucamon(

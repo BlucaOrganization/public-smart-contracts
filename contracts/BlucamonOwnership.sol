@@ -18,6 +18,24 @@ contract BlucamonOwnership is
     using SafeMath for uint256;
     using SafeMath8 for uint8;
 
+    event SafeMint(address to, uint256 tokenId);
+    event Summon(uint256 _id);
+    event MintBlucamon(
+        address _address,
+        string _tokenUri,
+        bool _isSummoned,
+        uint8 _rarity,
+        uint256 _blucadexId,
+        uint8 _eggElement
+    );
+    event MintBlucamons(
+        uint256[] _idList,
+        address[] _addressesList,
+        string[] _tokenUriList,
+        uint8[] _rarityList,
+        uint8[] _eggElementList
+    );
+
     constructor() ERC721("Blucamon", "BLUCAMON") {}
 
     modifier onlyOwnerOf(uint256 _id) {
@@ -60,6 +78,7 @@ contract BlucamonOwnership is
 
     function safeMint(address to, uint256 tokenId) external onlyOwner {
         _safeMint(to, tokenId);
+        emit SafeMint(to, tokenId);
     }
 
     function getIndex(uint256 _id) public view returns (uint256) {
@@ -136,6 +155,7 @@ contract BlucamonOwnership is
     function summon(uint256 _id) external onlySummoner {
         require(!blucamons[indexMapping[_id]].isSummoned, "S_SMN_100");
         summonBlucamon(_id);
+        emit Summon(_id);
     }
 
     function mintBlucamon(
@@ -152,6 +172,14 @@ contract BlucamonOwnership is
             _isSummoned,
             _address,
             _tokenUri,
+            _rarity,
+            _blucadexId,
+            _eggElement
+        );
+        emit MintBlucamon(
+            _address,
+            _tokenUri,
+            _isSummoned,
             _rarity,
             _blucadexId,
             _eggElement
@@ -214,6 +242,13 @@ contract BlucamonOwnership is
             );
             blucamonId = blucamonId.add(1);
         }
+        emit MintBlucamons(
+            _idList,
+            _addressesList,
+            _tokenUriList,
+            _rarityList,
+            _eggElementList
+        );
     }
 
     function getBlucamonList(address _address)

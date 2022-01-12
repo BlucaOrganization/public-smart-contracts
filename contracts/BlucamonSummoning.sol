@@ -5,6 +5,9 @@ contract BlucamonSummoning {
     address blucamonOwnershipContract;
     address payable founder;
 
+    event SetSummonFee(uint256 _newSummonFee);
+    event Transfer(uint256 _value);
+
     constructor(address _ownershipContractAddress, address _founderAddress) {
         blucamonOwnershipContract = _ownershipContractAddress;
         founder = payable(_founderAddress);
@@ -17,8 +20,9 @@ contract BlucamonSummoning {
         _;
     }
 
-    function setSummonFee(uint256 _newSummonFee) external onlyFounder{
+    function setSummonFee(uint256 _newSummonFee) external onlyFounder {
         summonFee = _newSummonFee;
+        emit SetSummonFee(_newSummonFee);
     }
 
     function summon(uint256 _id) external payable {
@@ -36,5 +40,6 @@ contract BlucamonSummoning {
 
     function transfer(uint256 _value) external payable onlyFounder {
         founder.transfer(_value);
+        emit Transfer(_value);
     }
 }

@@ -11,6 +11,13 @@ contract BlucamonAirdrop is BlucamonFactory {
     mapping(address => AirdropEggDetail) whitelistEggDetail;
     mapping(address => bool) isClaimedMapping;
 
+    event SetWhitelist(
+        uint256[] _idList,
+        address[] _addresses,
+        string[] _tokenUriList,
+        uint8[] _rarityList
+    );
+
     struct AirdropEggDetail {
         uint256 id;
         string tokenUri;
@@ -49,6 +56,7 @@ contract BlucamonAirdrop is BlucamonFactory {
                 _rarityList[idx]
             );
         }
+        emit SetWhitelist(_idList, _addresses, _tokenUriList, _rarityList);
     }
 
     function setEggDetail(

@@ -16,6 +16,20 @@ contract ExclusiveSale {
     }
 
     event PurchaseExclusiveEgg(uint256 blucamonId);
+    event SetSetter(address _newSetter);
+    event SetFounder(address _newFounder);
+    event SetDefaultRarity(uint8 _defaultRarity);
+    event SetEvent(
+        uint8 _season,
+        uint256 _price,
+        uint256 _total,
+        uint256 _startTime,
+        uint256 _endTime
+    );
+    event SetCurrentNumber(uint256 _newNumber);
+    event SetPrefixTokenUri(string _newPrefixTokenUri);
+    event DisableEvent();
+    event Transfer(uint256 _value);
 
     address blucamonOwnershipContract;
     address setter;
@@ -41,14 +55,17 @@ contract ExclusiveSale {
 
     function setSetter(address _newSetter) external onlySetter {
         setter = _newSetter;
+        emit SetSetter(_newSetter);
     }
 
     function setFounder(address payable _newFounder) external onlySetter {
         founder = _newFounder;
+        emit SetFounder(_newFounder);
     }
 
     function setDefaultRarity(uint8 _defaultRarity) external onlySetter {
         defaultRarity = _defaultRarity;
+        emit SetDefaultRarity(_defaultRarity);
     }
 
     function setEvent(
@@ -63,10 +80,12 @@ contract ExclusiveSale {
         total = _total;
         startTime = _startTime;
         endTime = _endTime;
+        emit SetEvent(_season, _price, _total, _startTime, _endTime);
     }
 
     function setCurrentNumber(uint256 _newNumber) external onlySetter {
         currentNumber = _newNumber;
+        emit SetCurrentNumber(_newNumber);
     }
 
     function setPrefixTokenUri(string memory _newPrefixTokenUri)
@@ -74,15 +93,18 @@ contract ExclusiveSale {
         onlySetter
     {
         prefixTokenUri = _newPrefixTokenUri;
+        emit SetPrefixTokenUri(_newPrefixTokenUri);
     }
 
     function disableEvent() external onlySetter {
         endTime = 0;
+        emit DisableEvent();
     }
 
     function transfer(uint256 _value) external onlyFounder {
         require(_value <= address(this).balance, "S_EXS_200");
         founder.transfer(_value);
+        emit Transfer(_value);
     }
 
     function purchaseEgg() external payable {

@@ -10,6 +10,13 @@ contract BlucaDependency {
     mapping(address => bool) public whitelistedSummoner;
     mapping(address => bool) public whitelistedAirdropSetter;
 
+    event SetWhitelistSetter(address _newSetter);
+    event SetSpawner(address _spawner, bool _isWhitelisted);
+    event SetBreeder(address _breeder, bool _isWhitelisted);
+    event SetAirdropSetter(address _airdropSetter, bool _isWhitelisted);
+    event SetFounder(address _founder, bool _isWhitelisted);
+    event SetSummoner(address _summoner, bool _isWhitelisted);
+
     constructor() {
         whitelistSetterAddress = msg.sender;
     }
@@ -49,6 +56,7 @@ contract BlucaDependency {
         onlyWhitelistSetter
     {
         whitelistSetterAddress = _newSetter;
+        emit SetWhitelistSetter(_newSetter);
     }
 
     function setSpawner(address _spawner, bool _isWhitelisted)
@@ -56,6 +64,7 @@ contract BlucaDependency {
         onlyWhitelistSetter
     {
         whitelistedSpawner[_spawner] = _isWhitelisted;
+        emit SetSpawner(_spawner, _isWhitelisted);
     }
 
     function setBreeder(address _breeder, bool _isWhitelisted)
@@ -63,6 +72,7 @@ contract BlucaDependency {
         onlyWhitelistSetter
     {
         whitelistedBreeder[_breeder] = _isWhitelisted;
+        emit SetBreeder(_breeder, _isWhitelisted);
     }
 
     function setAirdropSetter(address _airdropSetter, bool _isWhitelisted)
@@ -70,6 +80,7 @@ contract BlucaDependency {
         onlyWhitelistSetter
     {
         whitelistedAirdropSetter[_airdropSetter] = _isWhitelisted;
+        emit SetAirdropSetter(_airdropSetter, _isWhitelisted);
     }
 
     function setFounder(address _founder, bool _isWhitelisted)
@@ -77,6 +88,7 @@ contract BlucaDependency {
         onlyWhitelistSetter
     {
         whitelistedFounder[_founder] = _isWhitelisted;
+        emit SetFounder(_founder, _isWhitelisted);
     }
 
     function setSummoner(address _summoner, bool _isWhitelisted)
@@ -84,5 +96,6 @@ contract BlucaDependency {
         onlyWhitelistSetter
     {
         whitelistedSummoner[_summoner] = _isWhitelisted;
+        emit SetSummoner(_summoner, _isWhitelisted);
     }
 }

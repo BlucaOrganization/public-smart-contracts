@@ -14,6 +14,18 @@ contract StandardSale {
     }
 
     event PurchaseStandardEgg(uint256 blucamonId);
+    event SetSetter(address _newSetter);
+    event SetFounder(address _newFounder);
+    event SetEvent(
+        uint256 _price,
+        uint256 _total,
+        uint256 _startTime,
+        uint256 _endTime
+    );
+    event SetBusdContract(address _newAddress);
+    event SetCurrentNumber(uint256 _newNumber);
+    event SetPrefixTokenUri(string _newPrefixTokenUri);
+    event DisableEvent();
 
     address blucamonOwnershipContract;
     address setter;
@@ -33,10 +45,12 @@ contract StandardSale {
 
     function setSetter(address _newSetter) external onlySetter {
         setter = _newSetter;
+        emit SetSetter(_newSetter);
     }
 
     function setFounder(address payable _newFounder) external onlySetter {
         founder = _newFounder;
+        emit SetFounder(_newFounder);
     }
 
     function setEvent(
@@ -49,14 +63,17 @@ contract StandardSale {
         total = _total;
         startTime = _startTime;
         endTime = _endTime;
+        emit SetEvent(_price, _total, _startTime, _endTime);
     }
 
     function setBusdContract(address _newAddress) external onlySetter {
         busdContract = _newAddress;
+        emit SetBusdContract(_newAddress);
     }
 
     function setCurrentNumber(uint256 _newNumber) external onlySetter {
         currentNumber = _newNumber;
+        emit SetCurrentNumber(_newNumber);
     }
 
     function setPrefixTokenUri(string memory _newPrefixTokenUri)
@@ -64,10 +81,12 @@ contract StandardSale {
         onlySetter
     {
         prefixTokenUri = _newPrefixTokenUri;
+        emit SetPrefixTokenUri(_newPrefixTokenUri);
     }
 
     function disableEvent() external onlySetter {
         endTime = 0;
+        emit DisableEvent();
     }
 
     function purchaseEgg() external {
