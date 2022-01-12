@@ -75,6 +75,14 @@ contract ExclusiveSale {
         uint256 _startTime,
         uint256 _endTime
     ) external onlySetter {
+        require(
+            block.timestamp < startTime || block.timestamp >= endTime,
+            "S_EXS_502"
+        );
+        require(
+            block.timestamp <= _startTime && _startTime < _endTime,
+            "S_EXS_503"
+        );
         season = _season;
         price = _price;
         total = _total;

@@ -60,6 +60,14 @@ contract StandardSale {
         uint256 _startTime,
         uint256 _endTime
     ) external onlySetter {
+        require(
+            block.timestamp < startTime || block.timestamp >= endTime,
+            "S_STD_302"
+        );
+        require(
+            block.timestamp <= _startTime && _startTime < _endTime,
+            "S_STD_303"
+        );
         price = _price;
         total = _total;
         startTime = _startTime;
