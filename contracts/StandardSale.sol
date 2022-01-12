@@ -24,7 +24,6 @@ contract StandardSale {
         uint256 _startTime,
         uint256 _endTime
     );
-    event SetCurrentNumber(uint256 _newNumber);
     event SetPrefixTokenUri(string _newPrefixTokenUri);
     event DisableEvent();
 
@@ -68,16 +67,12 @@ contract StandardSale {
             block.timestamp <= _startTime && _startTime < _endTime,
             "S_STD_303"
         );
+        currentNumber = 0;
         price = _price;
         total = _total;
         startTime = _startTime;
         endTime = _endTime;
         emit SetEvent(_price, _total, _startTime, _endTime);
-    }
-
-    function setCurrentNumber(uint256 _newNumber) external onlySetter {
-        currentNumber = _newNumber;
-        emit SetCurrentNumber(_newNumber);
     }
 
     function setPrefixTokenUri(string memory _newPrefixTokenUri)

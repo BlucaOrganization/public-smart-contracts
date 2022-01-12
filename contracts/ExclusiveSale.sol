@@ -26,7 +26,6 @@ contract ExclusiveSale {
         uint256 _startTime,
         uint256 _endTime
     );
-    event SetCurrentNumber(uint256 _newNumber);
     event SetPrefixTokenUri(string _newPrefixTokenUri);
     event DisableEvent();
     event Transfer(uint256 _value);
@@ -83,17 +82,13 @@ contract ExclusiveSale {
             block.timestamp <= _startTime && _startTime < _endTime,
             "S_EXS_503"
         );
+        currentNumber = 0;
         season = _season;
         price = _price;
         total = _total;
         startTime = _startTime;
         endTime = _endTime;
         emit SetEvent(_season, _price, _total, _startTime, _endTime);
-    }
-
-    function setCurrentNumber(uint256 _newNumber) external onlySetter {
-        currentNumber = _newNumber;
-        emit SetCurrentNumber(_newNumber);
     }
 
     function setPrefixTokenUri(string memory _newPrefixTokenUri)
