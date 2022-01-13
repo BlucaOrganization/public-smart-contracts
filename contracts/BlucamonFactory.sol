@@ -34,7 +34,7 @@ abstract contract BlucamonFactory is BlucaDependency {
         return blucamonId;
     }
 
-    function setBlucamonId(uint256 _newBlucamonId) external onlySpawner {
+    function setBlucamonId(uint256 _newBlucamonId) external onlyFactorySetter {
         blucamonId = _newBlucamonId;
         emit SetBlucamonId(_newBlucamonId);
     }
@@ -45,7 +45,7 @@ abstract contract BlucamonFactory is BlucaDependency {
 
     function setDefaultElementalFragments(uint8 _newValue)
         external
-        onlySpawner
+        onlyFactorySetter
     {
         defaultElementalFragments = _newValue;
         emit SetDefaultElementalFragments(_newValue);

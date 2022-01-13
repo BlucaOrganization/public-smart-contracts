@@ -6,21 +6,34 @@ contract BlucamonSummoning {
     address payable founder;
 
     event SetSummonFee(uint256 _newSummonFee);
+    event SetSetter(address _newSetter);
     event Transfer(uint256 _value);
 
     constructor(address _ownershipContractAddress, address _founderAddress) {
         blucamonOwnershipContract = _ownershipContractAddress;
         founder = payable(_founderAddress);
+        setter = msg.sender;
     }
 
     uint256 public summonFee = 0.001 ether;
+    address setter;
 
     modifier onlyFounder() {
-        require(msg.sender == founder);
+        require(msg.sender == founder, "S_SMN_200");
         _;
     }
 
-    function setSummonFee(uint256 _newSummonFee) external onlyFounder {
+    modifier onlySetter() {
+        require(msg.sender == setter, "S_SMN_201");
+        _;
+    }
+
+    function setSetter(address _newSetter) external onlySetter {
+        setter = _newSetter;
+        emit SetSetter(_newSetter);
+    }
+
+    function setSummonFee(uint256 _newSummonFee) external onlySetter {
         summonFee = _newSummonFee;
         emit SetSummonFee(_newSummonFee);
     }

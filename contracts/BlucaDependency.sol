@@ -9,6 +9,7 @@ contract BlucaDependency {
     mapping(address => bool) public whitelistedFounder;
     mapping(address => bool) public whitelistedSummoner;
     mapping(address => bool) public whitelistedAirdropSetter;
+    mapping(address => bool) public whitelistedFactorySetter;
 
     event SetWhitelistSetter(address _newSetter);
     event SetSpawner(address _spawner, bool _isWhitelisted);
@@ -16,6 +17,7 @@ contract BlucaDependency {
     event SetAirdropSetter(address _airdropSetter, bool _isWhitelisted);
     event SetFounder(address _founder, bool _isWhitelisted);
     event SetSummoner(address _summoner, bool _isWhitelisted);
+    event SetFactorySetter(address _factorySetter, bool _isWhitelisted);
 
     constructor() {
         whitelistSetterAddress = msg.sender;
@@ -48,6 +50,11 @@ contract BlucaDependency {
 
     modifier onlySummoner() {
         require(whitelistedSummoner[msg.sender], "S_PMS_105");
+        _;
+    }
+
+    modifier onlyFactorySetter() {
+        require(whitelistedFactorySetter[msg.sender], "S_PMS_106");
         _;
     }
 
@@ -97,5 +104,13 @@ contract BlucaDependency {
     {
         whitelistedSummoner[_summoner] = _isWhitelisted;
         emit SetSummoner(_summoner, _isWhitelisted);
+    }
+
+    function setFactorySetter(address _factorySetter, bool _isWhitelisted)
+        external
+        onlyWhitelistSetter
+    {
+        whitelistedFactorySetter[_factorySetter] = _isWhitelisted;
+        emit SetFactorySetter(_factorySetter, _isWhitelisted);
     }
 }
