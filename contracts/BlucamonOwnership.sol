@@ -28,9 +28,8 @@ contract BlucamonOwnership is
         uint8 _eggElement
     );
     event MintBlucamons(
-        uint256[] _idList,
         address[] _addressesList,
-        string[] _tokenUriList,
+        string _prefixTokenUri,
         uint8[] _rarityList,
         uint8[] _eggElementList
     );
@@ -154,25 +153,26 @@ contract BlucamonOwnership is
 
     function mintBlucamon(
         address _address,
-        string memory _tokenUri,
+        string memory _prefixTokenUri,
         bool _isSummoned,
         uint8 _rarity,
         uint256 _blucadexId,
         uint8 _eggElement
     ) external onlySpawner {
         blucamonId = blucamonId.add(1);
+        string memory tokenUri = getTokenUri(_prefixTokenUri, blucamonId);
         spawn(
             blucamonId,
             _isSummoned,
             _address,
-            _tokenUri,
+            tokenUri,
             _rarity,
             _blucadexId,
             _eggElement
         );
         emit MintBlucamon(
             _address,
-            _tokenUri,
+            tokenUri,
             _isSummoned,
             _rarity,
             _blucadexId,
@@ -218,28 +218,26 @@ contract BlucamonOwnership is
     }
 
     function mintBlucamons(
-        uint256[] memory _idList,
         address[] memory _addressesList,
-        string[] memory _tokenUriList,
+        string memory _prefixTokenUri,
         uint8[] memory _rarityList,
         uint8[] memory _eggElementList
     ) external onlySpawner {
-        for (uint256 index = 0; index < _idList.length; index++) {
+        for (uint256 index = 0; index < _addressesList.length; index++) {
+            blucamonId = blucamonId.add(1);
             spawn(
-                _idList[index],
+                blucamonId,
                 false,
                 _addressesList[index],
-                _tokenUriList[index],
+                getTokenUri(_prefixTokenUri, blucamonId),
                 _rarityList[index],
                 0,
                 _eggElementList[index]
             );
-            blucamonId = blucamonId.add(1);
         }
         emit MintBlucamons(
-            _idList,
             _addressesList,
-            _tokenUriList,
+            _prefixTokenUri,
             _rarityList,
             _eggElementList
         );

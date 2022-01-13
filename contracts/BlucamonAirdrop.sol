@@ -2,8 +2,10 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 import "./BlucamonFactory.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract BlucamonAirdrop is BlucamonFactory {
+    using Strings for uint256;
     using SafeMath for uint256;
 
     constructor() {}
@@ -12,9 +14,8 @@ contract BlucamonAirdrop is BlucamonFactory {
     mapping(address => bool) isClaimedMapping;
 
     event SetWhitelist(
-        uint256[] _idList,
         address[] _addresses,
-        string[] _tokenUriList,
+        string _prefixTokenUri,
         uint8[] _rarityList
     );
 
@@ -38,33 +39,27 @@ contract BlucamonAirdrop is BlucamonFactory {
     }
 
     function setWhitelist(
-        uint256[] memory _idList,
         address[] memory _addresses,
-        string[] memory _tokenUriList,
+        string memory _prefixTokenUri,
         uint8[] memory _rarityList
     ) external onlyAirdropSetter {
-        validateWhitelistParameter(
-            _idList,
-            _addresses,
-            _tokenUriList,
-            _rarityList
-        );
+        validateWhitelistParameter(_addresses, _rarityList);
         for (uint256 idx = 0; idx < _addresses.length; idx++) {
+            blucamonId = blucamonId.add(1);
             whitelistEggDetail[_addresses[idx]] = setEggDetail(
-                _idList[idx],
-                _tokenUriList[idx],
+                blucamonId,
+                getTokenUri(_prefixTokenUri, blucamonId),
                 _rarityList[idx]
             );
         }
-        emit SetWhitelist(_idList, _addresses, _tokenUriList, _rarityList);
+        emit SetWhitelist(_addresses, _prefixTokenUri, _rarityList);
     }
 
     function setEggDetail(
         uint256 _id,
         string memory _tokenUri,
         uint8 _rarity
-    ) internal returns (AirdropEggDetail memory) {
-        blucamonId = blucamonId.add(1);
+    ) internal pure returns (AirdropEggDetail memory) {
         return
             AirdropEggDetail({id: _id, tokenUri: _tokenUri, rarity: _rarity});
     }
@@ -74,31 +69,24 @@ contract BlucamonAirdrop is BlucamonFactory {
     }
 
     function validateWhitelistParameter(
-        uint256[] memory _idList,
         address[] memory _addresses,
-        string[] memory _tokenUriList,
         uint8[] memory _rarityList
     ) private pure {
-        uint256 idCount = _idList.length;
         uint256 addressCount = _addresses.length;
-        uint256 tokenUriCount = _tokenUriList.length;
         uint256 rarityCount = _rarityList.length;
-        require(
-            addressCount > 0 &&
-                tokenUriCount > 0 &&
-                rarityCount > 0 &&
-                idCount > 0,
-            "S_ARD_101"
-        );
-        require(
-            addressCount == tokenUriCount &&
-                addressCount == rarityCount &&
-                addressCount == idCount,
-            "S_ARD_102"
-        );
+        require(addressCount > 0 && rarityCount > 0, "S_ARD_101");
+        require(addressCount == rarityCount, "S_ARD_102");
     }
 
     function getEggDetail() internal view returns (AirdropEggDetail memory) {
         return whitelistEggDetail[msg.sender];
+    }
+
+    function getTokenUri(string memory _prefixTokenUri, uint256 _id)
+        internal
+        pure
+        returns (string memory)
+    {
+        return string(abi.encodePacked(_prefixTokenUri, _id.toString()));
     }
 }
