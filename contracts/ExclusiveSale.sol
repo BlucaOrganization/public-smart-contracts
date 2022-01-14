@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.11;
+pragma solidity 0.8.11;
 
 import "./libraries/SafeMath8.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
